@@ -1,0 +1,173 @@
+body {
+	background-color: rgb(0,67,112);
+	text-align: center;
+	font-family: "Helvetica Neue",Helvetica, Arial, sans-serif;
+	height: 1262px;
+	//width: 1070px;
+}
+#header {
+	background-color: rgb(255,255,255);
+	margin: -2px -10px 0 -10px;
+	height: 87px;
+}
+	#header #onelogo {
+		max-height: 86px;
+		padding-top: 14px;
+		margin-left: -100px;
+	}
+	#header #tips {
+		text-align: right;
+		color: rgb(0,137,214);
+		float: right;
+		margin-right: 14px;
+		margin-top: 14px;
+		font-size: 18px;
+		font-weight: 900;
+		line-height: 25px;
+	}
+	#header a.button {
+		color: rgb(255,255,255);
+		text-decoration: none;
+		float: right;
+		width: 168px;
+		height: 44px;
+		margin-right: 80px;
+		margin-top: 15px;
+		font-size: 20px;
+		text-shadow: 0 1px 1px black;
+		background: rgb(196,17,57);
+		border: 1px solid rgb(196,17,57);
+		box-shadow:inset 0px 1px 4px 0px white;
+		border-radius: 4px;
+		line-height: 45px;
+	}
+	#header a.button:hover {
+		background: rgb(173,15,50);
+	}
+#mainpage {
+	height: 366px;
+}
+	#mainpage h1 {
+		margin-top: 66px;
+		color: rgb(255,255,255);
+		font-size: 63px;
+		line-height: 100%;
+	}
+	#mainpage h3{
+		margin-top: 51px;
+		color: rgb(255,255,255);
+		font-size: 36px;
+		font-weight: 500;
+	}
+	#mainpage a.button {
+		padding: 11px 37px;
+		text-shadow: 0 1px 1px black;
+		font-size: 21px;
+		background: rgb(196,17,57);
+		border: 1px solid rgb(196,17,57);
+		color: rgb(255,255,255);
+		box-shadow: inset 0px 1px 4px 0px white;
+		border-radius: 4px;
+		line-height: 45px;
+		text-decoration: none;
+		position: relative;
+		left: 88px;
+		top: 19px;
+	}
+	#mainpage a.button:hover {
+		background: rgb(173,15,50);
+	}
+	#mainpage #bbn {
+		float: right;
+		margin: 22px 70px auto auto; 
+	}
+
+#subpage {
+	background-color: rgb(255,255,255);
+	margin: 0 -10px 0 -10px;
+	height: 608px;
+}
+	#subpage h2 {
+		color: rgb(0,137,214);
+		font-size: 50px;
+		font-weight: 600;
+		padding-top: 0;
+		position: relative;
+		top: -5px;
+		line-height: 108%
+	}
+	#subpage table{
+		margin: 35px auto 40px auto;
+		padding: 16px;
+		border-width: 0;
+	}
+	#subpage td {
+		vertical-align: top;
+		padding: 9px;
+	}
+	#subpage td.checkmark{
+		text-align: right;
+	}
+	#subpage td.txt{
+		width: 256px;
+		padding: 7px 10px 30px 0;
+		font-size: 19px;
+		line-height: 24px; 
+		font-weight: 300;
+		line-height: 140%;
+		//width:236px;
+	}
+	#subpage strong {
+			font-size: 25px;
+			font-weight: 400;
+		}
+#footer{
+	border-top: 12px solid rgb(0,115,180);
+	margin: 0 -10px 0 -10px;
+	color: rgb(255,255,255);
+	text-align: left;
+}
+	#footer #meta {
+		margin-left: 66px;
+		padding-top: 18px;
+		padding-bottom: 15px;
+	}
+	#footer #bull {
+		color: rgb(0,115,180);
+		font-size: 22px;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+	.footermeta{
+		font-size: 17px;
+		display: inline;
+	}
+	a.hlink:link {
+		color: rgb(255,255,255); text-decoration: none
+	}
+	a.hlink:visited {
+		color: rgb(255,255,255); text-decoration: none
+	}
+	a.hlink:hover {
+		text-decoration: underline
+	}
+	#footer #band {
+		height: 1px;
+		margin-left: 65px;
+		margin-right: 65px;
+		background-color: rgb(0,115,180);
+	}
+	#footer #copyright {
+		font-size: 12px;
+		margin-left: 66px;
+		padding-top: 4px;
+	}
+
+
+
+
+
+
+
+
+
