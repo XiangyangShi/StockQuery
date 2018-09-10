@@ -1,0 +1,200 @@
+<html>
+<head>
+	<meta name="HomeWork4" content="XiangyangShi">
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<title>Homework 4</title>
+	<base target="_blank">
+	<style type="text/css">
+		body {
+			text-align: center; 
+		}
+	</style>
+<script>
+flag_nonrow=0;
+function fakefunction(){
+	alert("1");
+}
+function generateHTML(jasonPage){
+	//ELEMENT_NODE = 1;    // MS parser doesn't define Node.ELEMENT_NODE
+	root=jasonPage.DocumentElement;
+	html_text="<html><head><title>Jason Parse Result</title></head>";
+	html_text+="<body><table border='2'><tr>";
+/////////
+	Headers=jasonPage.Mainline.Table.Header.Data;
+	for(i=0;i<Headers.length;i++){
+		html_text+="<th>"+Headers[i]+"</th>";
+	}
+	html_text+="</tr>";
+	if(jasonPage.Mainline.Table["Row"]!==undefined){
+		Rows=jasonPage.Mainline.Table.Row;
+		if(Rows.length!=0){//interesting
+			x=280;
+			y=150;
+		/////////
+			for(i=0;i<Rows.length;i++){
+				Row=Rows[i];
+				html_text+="<tr>";
+				//Airline
+					airline="";
+					if(Row["Airline"]!==undefined)
+						airline=Row["Airline"];
+					html_text+="<td>"+airline+"</td>";
+				//IATA
+					iATA="";
+					if(Row["IATA"]!==undefined)
+						iATA=Row["IATA"];
+					html_text+="<td>"+iATA+"</td>";
+				//Hubs
+					html_text+="<td>";
+					try{
+						if(Row["Hubs"]!==undefined){
+							hubs=Row["Hubs"].Hub;
+							html_text+="<ul>";
+							flag=1;
+							for(j=0;j<hubs.length;j++){
+								if(flag)
+									html_text+="<li><b>"+hubs[j]+"</b></li>";
+								else
+									html_text+="<li>"+hubs[j]+"</li>";
+								flag=0;
+							}
+							html_text+="</ul>";
+						}
+					}
+					catch(err){
+						;
+					}
+					html_text+="</td>";
+				//Notes
+					notes="";
+					if (Row["Notes"]!==undefined)
+						notes=Row["Notes"];
+					html_text+="<td>"+notes+"</td>";
+				//Homepage
+					if (Row["HomePage"]!==undefined)
+						html_text+="<td><a href='"+Row["HomePage"]+"'>"+Row[Headers[4]]+"</a></td>";
+					else
+						html_text+="<td></td>";
+				//Plane
+					if (Row["Plane"]!==undefined && Row["Plane"]!=="")
+						html_text+="<td><img src='"+Row["Plane"]+"' width='"+x+"' height='"+y+"'></td>";
+					else
+						html_text+="<td><br /><br /></td>";
+				html_text+="</tr>";
+			}
+		}
+		else{
+			html_text+="<tr>"
+			html_text+="<td></td>"
+			html_text+="<td></td>"
+			html_text+="<td></td>"
+			html_text+="<td></td>"
+			html_text+="<td></td>"
+			html_text+="<td><br /><br /></td>"
+			html_text+="</tr>"
+		}
+	}
+	else
+		{
+		alert("no airlinerow in the json file");  
+		flag_nonrow=1; 
+		throw "noline";
+		}
+	html_text+="</table>";
+	//html_text+="bbb";
+	html_text+="</body></html>"; 
+}
+
+function getjason(item){
+var URL=item.json.value;
+flag_nonrow=0;
+//var patt1=new RegExp("/^[\s]*$/");
+//alert(URL.search(/^[\s]*$/));
+if(URL.search(/^[\s]*$/)==0){
+	alert("empty url!");
+}
+else{
+	//alert(URL.search("/^[\s]*$/"));
+	function loadjson(url){
+		if(window.XMLHttpRequest){
+			//ie7 firefox chrome safari
+			xmlhttp=new XMLHttpRequest();
+		}
+		else{
+			//ie6 ie5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+			xmlhttp.open("GET",url,false);
+			xmlhttp.send();
+			jasonObj=JSON.parse(xmlhttp.responseText);
+		return jasonObj;
+	}
+	//
+	try{
+		jasonObj = loadjson(URL);
+	}
+	catch(err){
+		testerr=""
+		testerr+=err;
+		//alert(xmlhttp.status+" "+err);
+		if(testerr.search("network")!= -1 || xmlhttp.status==404){
+		textalert1="The json cannot be reached";
+		alert(textalert1);
+		}
+		else if(testerr.search("yntax")!= -1 ){
+		textalert2="The json may have syntax error";
+		alert(textalert2);
+		}
+		else if(testerr.search("airlinerow")!= -1 ){
+		textalert2="The json has now airline";
+		alert(textalert2);
+		}
+		else{
+		textalert3="There is an error";
+		alert(textalert3);
+		}
+		return 0;
+	}
+	if(flag_nonrow==0){
+	if (window.ActiveXObject){
+		//if IEzx, simply execute
+		if (jasonObj.parseError.errorCode!=0){
+			var myErr = jasonObj.parseError;
+			generateError(jasonObj);
+			hWin = window.open("","Error","height=300,width=660");
+			hWin.document.write(html_text);
+		}
+		else{
+			generateHTML(jasonObj);
+			hWin=window.open("","Assignment4","height=800,width=1100");
+			hWin.document.write(html_text);
+		}
+	}
+	else{
+		//else if firefox execute scirot once json has loaded
+			jasonObj.onload=generateHTML(jasonObj);
+			hWin=window.open("","Assignment4","height=800,width=1100");
+			hWin.document.write(html_text);
+	}
+	hWin.document.close();
+	}
+}
+}
+</script>
+</head>
+
+<body>
+<br />
+<br />
+<br />
+<h3>Enter URL for Airlines List JSON File</h3>
+<form name="form" method="POST" id="mainform">
+<input type="text" name="json" maxlength="255" size="30" value="airlinelist.json">
+<br /><br />
+<button type="button" name="submit" onclick="getjason(this.form)">Submit Query</button>
+</form>
+
+<noscript></noscript>
+</body>
+<!-- usc tag <noscript></noscript> -->
+</html>
