@@ -1,0 +1,93 @@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript">
+	function loadjson(func){
+		url="https://www.alphavantage.co/query?function="+func+"&symbol=MSFT&interval=weekly&time_period=10&series_type=open&apikey=NEQW9X9MF77YLVBM";
+		if(window.XMLHttpRequest){
+			xmlhttp=new XMLHttpRequest();
+		}
+		else{
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		// xmlhttp.onreadystatechange=function(){
+		// 	if (xmlhttp.readyState==4 && xmlhttp.status==200){
+		// 		jasonObj=JSON.parse(xmlhttp.responseText);
+		// 		//return jasonObj;
+		// 		//Obj=loadjson();
+		// 		Dates=jasonObj["Technical Analysis: SMA"];
+		// 		alert("Dates");
+		// 	}
+		// }
+		// xmlhttp.open("GET","url",true);
+		// xmlhttp.send();
+		xmlhttp.open("GET",url,false);
+		xmlhttp.send();
+		jasonObj=JSON.parse(xmlhttp.responseText);
+		//alert(xmlhttp.responseText);
+		FuncString="Technical Analysis: "+func;
+		Dates=jasonObj[FuncString];
+		symbolTxt=jasonObj["Meta Data"]["1: Symbol"];
+		titleTxt=jasonObj["Meta Data"]["2: Indicator"];
+		datanull=[];
+		datanullSMA=[];
+		for(date in Dates){
+			datanull.push(date);
+			datanullSMA.push(parseFloat(Dates[date][func]));
+		}
+		//alert([,,,,]);
+		//alert(datanull);
+		//alert(datanullSMA);
+		//a=[1,2,1,3,4,5,3,6,7,8];
+		document.getElementById("aaaa").innerHTML+=datanull;
+		document.getElementById("aaaa").innerHTML+='<br />';
+		document.getElementById("aaaa").innerHTML+=datanullSMA;
+		document.getElementById("aaaa").innerHTML+='<br />';
+		//document.getElementById("aaaa").innerHTML+=a;
+		//document.getElementById("aaaa").innerHTML+='<br />';
+		
+		indicator1(func,symbolTxt,titleTxt,datanull,datanullSMA);
+	}
+	function indicator1(func,symbolTxt,titleTxt,inputx,inputy){
+		Highcharts.chart('container', {
+			title: { text: titleTxt },
+			subtitle: { text: 'Source: <a href="https://www.alphavantage.co/">Alpha Vantage</a>' },
+			xAxis: [{
+				categories: inputx,
+				allowDecimals: false,
+				crosshair: true }],
+			yAxis: {title: {text: func } },
+			legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+			plotOptions: {
+				series: { label: { connectorAllowed: false }}//, pointStart: 2010 }
+			},
+			series: [{
+					name: symbolTxt,
+					data: inputy
+				}],
+			responsive: {
+				rules: [{
+					condition: {maxWidth: 500},
+					chartOptions: {
+						legend: {layout: 'horizontal',align: 'center',verticalAlign: 'bottom'}
+					}
+				}]
+			}
+		});
+	}
+</script>
+</head>
+<body>
+	<span id="aaaa"></span>
+	aaa
+<div id="container" style="max-width:800px; height:400px; margin:0 auto;"></div>
+	bbb
+	<script type="text/javascript">
+		c=['Jan', 'Feb', 'Mar', 'Apr'];//, 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		a=[49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4];
+		b=[7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6];
+		//indicator1();
+		loadjson("ADX");
+	</script>>
+</body>
+</html>

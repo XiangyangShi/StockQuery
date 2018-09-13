@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript">
+
+function stockvolume(inputa,inputb,inputc){
+	Highcharts.chart('container', {
+		chart: {zoomType: 'xy'},
+		title: {text: 'Stock Price()'},
+		subtitle: {text: 'Source: <a href="">Alpha Vantage</a>'},
+		xAxis: [{
+			categories: inputc,
+			crosshair: true }],
+		yAxis: [{ // Primary yAxis
+				labels: { format: '{value}', style: {color: Highcharts.getOptions().colors[1]} },
+				title: { text: 'Stock Price', style: {color: Highcharts.getOptions().colors[1]} }
+			}, { // Secondary yAxis
+				title: { text: 'Volume', style: { color: Highcharts.getOptions().colors[0] } },
+				labels: { format: '{value}M', style: { color: Highcharts.getOptions().colors[0] }
+				// formatter: function () {return this.value / 1000 + 'k';}
+			},
+			opposite: true }],
+		tooltip: {  shared: true },//pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+		legend: { layout: 'vertical', align: 'right', verticalAlign: 'center', floating: false,
+			backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF' },
+		plotOptions: {
+				area: { marker: { enabled: false, symbol: 'circle', radius: 2, states: { hover: { enabled: true } } }
+				}
+			},
+		series: [{ name: 'Volume', type: 'column', yAxis: 1,
+				data: inputa,
+				tooltip: { valueSuffix: 'M' } 
+			}, { name: 'Stock Price', type: 'area',
+				data: inputb,
+				tooltip: { valueSuffix: ' ' }
+			}]
+	});
+}
+stockvolume();
+</script>
+</head>
+<body>
+	aaa
+<div id="container" style="max-width:800px; height:400px; margin:0 auto;"></div>
+	bbb
+	<script type="text/javascript">
+		c=['Jan', 'Feb', 'Mar', 'Apr'];//, 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		a=[49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4];
+		b=[7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6];
+		stockvolume(a,b,c);
+	</script>>
+</body>
+</html>
