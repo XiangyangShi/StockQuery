@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>homework 8</title>
+	<meta charset="utf-8">
+	<meta name="HomeWork8" content="XiangyangShi">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- jquery [using runoob CDN]-->
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+
+	<!-- bootstrap [using baidu CDN]-->
+	<script src="https://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css">
+	<!-- bootstrap switch -->
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+	<!-- angular css -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+  	<link rel="stylesheet" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.css">
+  	<link rel="stylesheet" href="https://material.angularjs.org/1.1.5/docs.css">
+	<!-- angular js -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+	<script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.5/angular-material.js"></script>
+	<!-- high chart CDN [highchart itself]-->
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<!-- local css and local jquery-->
+	<link href="a.css" type="text/css" rel="stylesheet">
+	<script src="a.js"></script>
+</head>
+<body ng-app="MyApp" ng-controller="DemoCtrl as ctrl">
+
+<!-- auto-complete input -->
+<div id="firstPart" class="panel panel-default">
+	<div class="panel-body">
+	<form class="form-inline">
+		<h1 style="text-align: center">Stock Market Search</h1>
+		<div class="row">
+			<div class="col-md-3 col-sm-4">
+				<label for="inputfile">Enter Stock Ticker Symbol:<span>*</span></label>
+			</div>
+			<!-- input type="text" class="form-control" id="quote" placeholder="e.g. AAPL" -->
+			<div class="autoauto col-md-6 col-sm-4">
+				<div layout="column" ng-cloak="" class="autocompletedemoCustomTemplate" ><!--ng-controller="DemoCtrl as ctrl" ng-app="MyApp" -->
+					<form ng-submit="$event.preventDefault()">
+						<span id="quote">{{ctrl.searchText}}</span>
+						<md-autocomplete ng-disabled="ctrl.isDisabled" 
+							md-no-cache="ctrl.noCache" 
+							md-selected-item="ctrl.selectedItem" 
+							md-search-text-change="ctrl.searchTextChange(ctrl.searchText)" 
+							md-search-text="ctrl.searchText" 
+							md-selected-item-change="ctrl.selectedItemChange(item)" 
+							md-items="item in ctrl.querySearch(ctrl.searchText)" 
+							md-item-text="item.Symbol"
+							md-min-length="0" 
+							placeholder="e.g. AAPL" 
+							md-menu-class="autocomplete-custom-template">
+							<md-item-template>
+								<span class="item-title">
+									<md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
+									<span> {{item.Symbol}} </span>
+								</span>
+								<span class="item-metadata">
+									<span>
+											wholename is
+											<strong>{{item.Name}}</strong>
+									</span>
+									<br />
+									<span>
+											stockmarket is
+											<strong>{{item.Exchange}}</strong>
+									</span>
+								</span>
+							</md-item-template>
+						</md-autocomplete>
+					</form>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-4">
+				<button id="getquote" type="button" class="btn btn-primary" ng-click="buttonleft()">
+					<i class="glyphicon glyphicon-search"></i> Get Quote
+				</button>
+				<button id="getclear" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-refresh"></span> Clear
+				</button>
+			</div>
+		</div>
+
+	</form>
+	</div>
+</div>
+
+
+
+<!-- Favourite List -->
+	<hr />
+	<div id="leftpanel" ng-show="appshow">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-2 col-xs-2">
+						<span>Favorite Lists</span>
+					</div>
+					<div class="col-md-4 col-md-offset-7 col-sm-3 col-sm-offset-8">
+						<label class="checkbox-inline">
+							<input id="refreshornot" type="checkbox" checked data-toggle="toggle">
+						</label>
+						<button id="refresh" type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-refresh"></span>
+						</button>
+						<button id="rightpage" type="button" class="btn btn-default" ng-click="buttonleft()">
+							<span class="glyphicon glyphicon-chevron-right"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-5 col-xs-5">
+						<p3>Sort by</p3>
+						<span class="dropdown">
+							<button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+								<span id="dropdownMenu1text">Default</span>
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+								<li role="presentation">
+									<a id="clickdefault" role="menuitem" tabindex="0" href="javascript:void(0)">Default</a>
+								</li>
+								<li role="presentation">
+									<a id="clicksymbol" role="menuitem" tabindex="1" href="javascript:void(0)">Symbol</a>
+								</li>
+								<li role="presentation">
+									<a id="clickprice" role="menuitem" tabindex="2" href="javascript:void(0)">Price</a>
+								</li>
+								<li role="presentation">
+									<a id="clickchange" role="menuitem" tabindex="3" href="javascript:void(0)">Change</a>
+								</li>
+								<li role="presentation">
+									<a id="clickchangepercent" role="menuitem" tabindex="4" href="javascript:void(0)">Change Percent</a>
+								</li>
+								<li role="presentation">
+									<a id="clickvolume" role="menuitem" tabindex="5" href="javascript:void(0)">Volume</a>
+								</li>
+							</ul>
+						</span>
+					</div>
+					<div class="col-md-6 col-xs-6">
+						<p3>Order</p3>
+						<span class="dropdown">
+							<button type="button" class="btn dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown"><span id="dropdownMenu2text">descending</span>
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+								<li role="presentation">
+									<a id="clickasc" role="menuitem" tabindex="0" href="javascript:void(0)">ascending</a>
+								</li>
+								<li role="presentation">
+									<a id="clickdesc" role="menuitem" tabindex="1" href="javascript:void(0)">descending</a>
+								</li>
+							</ul>
+						</span>
+					</div>
+				</div>
+				<table id="myTable" class="table table-striped">
+					<thead>
+						<tr>
+							<th>Symbol</th>
+							<th>Stock Price</th>
+							<th>Change (Change Percent)</th>
+							<th>Volume</th>
+						</tr>
+					</thead>
+					<tbody id="favourtable">
+						<!--
+						<tr>
+							<td>Tanmay</td>
+							<td>price</td>
+							<td>change changepercent</td>
+							<td>volume 
+								<button type="button" class="btn btn-default favour">
+									<span class="glyphicon glyphicon-trash"></span>
+								</button>
+							</td>
+						</tr>
+						-->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+<!-- Charts -->
+	<div id="rightpanel" ng-show="appshow2">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-5 col-xs-5">
+						<button id="leftpage" type="button" class="btn btn-default" ng-click="buttonright()">
+							<span class="glyphicon glyphicon-chevron-left"></span>
+						</button>
+					</div>
+					<div class="col-md-6 col-xs-6">
+						<span class="panel-title">Stock Details</span>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-pills">
+					<li id="nav21" class="active"><a href="javascript:void(0)">Current Stock</a></li>
+					<li id="nav22"><a href="javascript:void(0)">Historic Charts</a></li>
+					<li id="nav23"><a href="javascript:void(0)">News Feeds</a></li>
+				</ul>
+
+				<hr />
+				<div class="container">
+					<div id="pan21" class="row">
+						<!-- table detail -->
+						<div class="col-md-6 col-xs-12">
+							<table class="table table-striped">
+								<div class="row">
+									<div class="col-md-8 col-xs-8">
+										<h3>Stock Details</h3>
+									</div>
+									<div class="col-md-4 col-xs-4">
+										<button id="star1" type="button" class="btn btn-default btn-lg favour">
+											<span class="glyphicon glyphicon glyphicon-star"></span>
+										</button>
+										<button id="star0" type="button" class="btn btn-default btn-lg favour">
+											<span class="glyphicon glyphicon glyphicon-star-empty"></span>
+										</button>
+										<button id="faceicon" type="button" class="btn btn-default btn-lg favour">
+											<img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png" />
+										</button>
+									</div>
+								</div>
+								<div id="pan211pro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+								<tbody id="pan211">
+									<tr><th>Stock Ticker Symbol</th>
+										<td><span id="stockticker"></span></td>
+									</tr>
+									<tr><th>Last Price</th>
+										<td><span id="lastprice"></span></td>
+									</tr>
+									<tr><th>Change(Change Percent)</th>
+										<td><span id="change"></span>
+											<img id="downimg" src="http://cs-server.usc.edu:45678/hw/hw8/images/Down.png" alt="Down" />
+											<img id="upimg" src="http://cs-server.usc.edu:45678/hw/hw8/images/Up.png" alt="Up" />
+										</td>
+									</tr>
+									<tr><th>Timestamp</th>
+										<td><span id="timestamp"></span></td>
+									</tr>
+									<tr><th>Open</th>
+										<td><span id="open"></span></td>
+									</tr>
+									<tr><th>Close</th>
+										<td><span id="close"></span></td>
+									</tr>
+									<tr><th>Days Range</th>
+										<td><span id="dayrange"></span></td>
+									</tr>
+									<tr><th>Volume</th>
+										<td><span id="volume"></span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- 1st panel Charts -->
+						<div class="col-md-6 col-xs-12">
+							<ul class="nav nav-tabs">
+								<li id="price" class="active nav3"><a href="javascript:void(0)">Price</a></li>
+								<li id="SMA" class="nav3"><a href="javascript:void(0)">SMA</a></li>
+								<li id="EMA" class="nav3"><a href="javascript:void(0)">EMA</a></li>
+								<li id="STOCH" class="nav3"><a href="javascript:void(0)">STOCH</a></li>
+								<li id="RSI" class="nav3"><a href="javascript:void(0)">RSI</a></li>
+								<li id="ADX" class="nav3"><a href="javascript:void(0)">ADX</a></li>
+								<li id="CCI" class="nav3"><a href="javascript:void(0)">CCI</a></li>
+								<li id="BBANDS" class="nav3"><a href="javascript:void(0)">BBANDS</a></li>
+								<li id="MACD" class="nav3"><a href="javascript:void(0)">MACD</a></li>
+							</ul>
+							<div id="containerprice" class="allcharts">
+								<div id="containerpriceex"></div>
+								<div id="containerpricepro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerSMA" class="allcharts">
+								<div id="containerSMAex"></div>
+								<div id="containerSMApro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerEMA" class="allcharts">
+								<div id="containerEMAex"></div>
+								<div id="containerEMApro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerSTOCH" class="allcharts">
+								<div id="containerSTOCHex"></div>
+								<div id="containerSTOCHpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerRSI" class="allcharts">
+								<div id="containerRSIex"></div>
+								<div id="containerRISpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerADX" class="allcharts">
+								<div id="containerADXex"></div>
+								<div id="containerADXpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerCCI" class="allcharts">
+								<div id="containerCCIex"></div>
+								<div id="containerCCIpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerBBANDS" class="allcharts">
+								<div id="containerBBANDSex"></div>
+								<div id="containerBBANDSpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+							<div id="containerMACD" class="allcharts">
+								<div id="containerMACDex"></div>
+								<div id="containerMACDpro" class="progress progress-striped active">
+									<div class="progress-bar progress-bar-info" role="progressbar" 
+									aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+									style="width: 60%;">
+										<span class="sr-only">90% 完成（成功）</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 2nd panel historic charts-->
+					<div id="pan22" class="row">
+						<div id="pan22pro" class="progress progress-striped active">
+							<div class="progress-bar progress-bar-info" role="progressbar" 
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+							style="width: 60%;">
+								<span class="sr-only">90% 完成（成功）</span>
+							</div>
+						</div>
+						<div id="containerhistory"></div>
+					</div>
+					<!-- 3rd panel news charts-->
+					<div id="pan23" class="row">
+						<div id="pan23pro" class="progress progress-striped active">
+							<div class="progress-bar progress-bar-info" role="progressbar" 
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 	
+							style="width: 60%;">
+								<span class="sr-only">90% 完成（成功）</span>
+							</div>
+						</div>
+						<div id="pan23ex"></div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- 
+	<div ng-app="myApp" ng-controller="myCtrl">
+	{{ firstName + " " + lastName }}
+	</div>
+	<script src="myApp.js"></script>
+	<script src="myCtrl.js"></script>
+-->
+
+<script>
+	
+
+
+	(function () {
+  'use strict';
+  angular
+      .module('MyApp',['ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+      .controller('DemoCtrl', DemoCtrl);
+
+  function DemoCtrl ($timeout, $q, $log , $http ,$scope) {
+    var self = this;
+
+        $scope.appshow=true;
+        $scope.appshow2=false;
+        $scope.buttonleft=function(){
+            $scope.appshow=false;
+            $scope.appshow2=true;
+        };
+        $scope.buttonright=function(){
+            $scope.appshow2=false;
+            $scope.appshow=true;
+        };
+
+    self.simulateQuery = true;
+    self.isDisabled    = false;
+    // self.querys        = querys;
+    self.repos         = [];//loadAll();
+    self.querySearch   = querySearch;
+    self.selectedItemChange = selectedItemChange;
+    self.searchTextChange   = searchTextChange;
+
+    // self.searchTextChange1   = searchTextChange1;
+    
+    // ******************************
+    // Internal methods
+    // ******************************
+
+    /**
+     * Search for repos... use $timeout to simulate
+     * remote dataservice call.
+     */
+    function querySearch(query) {
+      
+                var results = query ? self.repos.filter( createFilterFor(query) ) : self.repos,
+                    deferred;
+                if (self.simulateQuery) {
+                  deferred = $q.defer();
+                  // $timeout(function () { searchTextChange(query); deferred.resolve( results ); }, Math.random() * 100, false);
+                    $log.info('Text changed to ' + query);
+                    var url="http://homework8environment.us-east-2.elasticbeanstalk.com/auto?symbol=" + query;
+                    $http.get(url).success( function(response) {
+                            var repopo = response; 
+                            self.repos = loadnotall(repopo);
+                            deferred.resolve( self.repos );
+                            console.log("deferred",self.repos);
+                          });
+                  return deferred.promise;
+                  // alert(results);
+                } else {
+                  console.log("notdeferred",results);
+                  return results;
+                }
+ 
+
+    }
+//md-items="item in ctrl.querySearch(ctrl.searchText)"
+
+
+    function searchTextChange(text) {
+      $log.info('Text changed to ' + text);
+    }
+
+    function selectedItemChange(item) {
+      $log.info('Item changed to ' + JSON.stringify(item));
+    }
+
+    /**
+     * Build `components` list of key/value pairs
+     */
+    function loadAll() {
+      var repos = [{"Symbol":"AA","Name":"Alcoa Corp","Exchange":"NYSE"},
+      {"Symbol":"AA","Name":"Alcoa Corp","Exchange":"BATS Trading Inc"},
+      {"Symbol":"AAON","Name":"AAON Inc","Exchange":"NASDAQ"},
+      {"Symbol":"AAP","Name":"Advance Auto Parts Inc","Exchange":"NYSE"},
+      {"Symbol":"AAPL","Name":"Apple Inc","Exchange":"NASDAQ"},
+      {"Symbol":"AAN","Name":"Aaron's Inc","Exchange":"NYSE"},
+      {"Symbol":"AIR","Name":"AAR Corp","Exchange":"NYSE"},
+      {"Symbol":"AAC","Name":"AAC Holdings Inc","Exchange":"NYSE"},
+      {"Symbol":"AIR","Name":"AAR Corp","Exchange":"BATS Trading Inc"},
+      {"Symbol":"AAN","Name":"Aaron's Inc","Exchange":"BATS Trading Inc"}];
+      return repos.map( function (repo) {
+        repo.value = repo.Symbol.toLowerCase();
+        return repo;
+      });
+    }
+
+    function loadnotall(reposy) {
+      return reposy.map( function (repo) {
+        repo.value = repo.Symbol.toLowerCase();
+        return repo;
+      });
+    }
+    /**
+     * Create filter function for a query string
+     */
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(item) {
+        // return (item.value.indexOf(lowercaseQuery) === 0);
+        return true;
+      };
+
+    }
+  }
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+body{
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-image: url(http://cs-server.usc.edu:45678/hw/hw8/images/background.png);
+	background-repeat: repeat;
+}
+h1{
+	margin-bottom: 20px;
+}
+hr {
+	margin-left: 15px;
+	margin-right: 15px;
+}
+#firstPart{
+	padding-bottom: 20px;
+}
+#pan23 h1{
+	font-size: 23px;
+}
+#pan23 h3{
+	font-size: 15px;
+}
+#container1 {
+	min-width: 310px;
+	max-width: 800px;
+	height: 400px;
+	margin: 0 auto
+}
+img {
+	max-width: 12px;
+	min-width: 10px;
+	max-height: 12px;
+	min-height: 10px;
+}
+#star0, #star1{
+	color: rgb(255,192,0);
+	font-size: 22px;
+}
+button img{
+	min-width: 24px;
+	min-height: 24px;
+	padding: 0 0 0 0;
+}
+.favour{
+	min-height: 50px;
+	min-width: 27px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+md-content {
+	padding: 0 0 0 0;
+}
+md-autocomplete {
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+}
+.autocomplete-custom-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal;
+}
+.progress{
+	margin-top: 50px;
+	margin-bottom: 50px; 
+	margin-left: 10%;
+	margin-right: 10%;
+}
+.autocomplete-custom-template li:last-child {
+  border-bottom-width: 0;
+}
+.autocomplete-custom-template .item-title,
+.autocomplete-custom-template .item-metadata {
+  display: block;
+  line-height: 2;
+}
+.autocomplete-custom-template .item-title md-icon {
+  height: 18px;
+  width: 18px;
+}
+.pannel-heading {
+	min-height: 35px;
+}
+@keyframes leftshow{
+	from{
+		margin-left: -100%;
+		width: 0;
+	} to {
+		margin-left: 0;
+		width: 100%;
+	}
+}
+@keyframes rightshow{
+	from{
+		margin-left: 100%;
+		width: 0;
+	} to {
+		margin-left: 0;
+		width: 100%;
+	}
+}
+
+#leftpanel.ng-hide-remove{
+	animation: 0.5s leftshow;
+}
+#rightpanel.ng-hide-remove{
+	animation: 0.5s rightshow;
+}
